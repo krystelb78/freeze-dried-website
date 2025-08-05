@@ -4,22 +4,79 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Freeze Dried Candy Shop</title>
+  <title>Freeze-Dried Candy Delight</title>
+  <link href="https://fonts.googleapis.com/css2?family=Flavors&display=swap" rel="stylesheet">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      font-family: 'Flavors', cursive;
+      background: #fffaf0;
+      padding: 2rem;
+      text-align: center;
+    }
+    .card {
+      background: white;
+      padding: 1rem;
+      border-radius: 10px;
+      margin: 1rem auto;
+      max-width: 600px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    button {
+      background: #ec4899;
+      color: white;
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      margin-top: 1rem;
+    }
+    input, textarea {
+      width: 90%;
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+  </style>
 </head>
 <body>
-  <!-- Your site content would be here -->
+
+  <h1>🍬 Welcome to Freeze-Dried Candy Delight</h1>
+  <div class="card">
+    <h2>Mystery Box Subscription</h2>
+    <p>Try a surprise mix of our best freeze-dried candies monthly. $25 for a $40 value!</p>
+    <a href="https://checkout.square.site/merchant/YBBHNNBJQ1395/checkout/AWVQGHLVMELGN6K5UCP726OH" target="_blank">
+      <button>Subscribe Now</button>
+    </a>
+  </div>
+
+  <div class="card">
+    <h2>Generate Packing Slip</h2>
+    <input id="orderName" placeholder="Customer Name" />
+    <textarea id="orderItems" placeholder="Item List (one per line)"></textarea>
+    <button onclick="generatePackingSlip()">Generate Slip</button>
+    <button onclick="downloadPackingSlip()">Download PDF</button>
+    <pre id="slipContent"></pre>
+  </div>
+
+  <div class="card">
+    <h2>Send Shipping Email</h2>
+    <input id="shippingEmail" placeholder="Customer Email" />
+    <input id="trackingNumber" placeholder="Tracking Number" />
+    <textarea id="customMessage" placeholder="Optional Message"></textarea>
+    <button onclick="sendShippingNotification()">Send Email</button>
+  </div>
+
   <script>
     function generatePackingSlip() {
       const name = document.getElementById("orderName").value.trim();
       const items = document.getElementById("orderItems").value.trim();
-      const slipArea = document.getElementById("packingSlip");
       const slipContent = document.getElementById("slipContent");
       if (!name || !items) return alert("Fill in both name and items.");
       const date = new Date().toLocaleDateString();
       const formatted = `Customer: ${name}\nDate: ${date}\n\nItems:\n${items}`;
       slipContent.textContent = formatted;
-      slipArea.classList.remove("hidden");
     }
 
     function downloadPackingSlip() {
@@ -40,7 +97,6 @@
       const tracking = document.getElementById("trackingNumber").value.trim();
       const msg = document.getElementById("customMessage").value.trim();
       if (!email || !tracking) return alert("Email and tracking number are required.");
-
       fetch('https://formsubmit.co/ajax/krystel@rodgersjamberries.com', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
