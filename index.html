@@ -1,0 +1,59 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Freeze Dried Candy Shop</title>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+</head>
+<body>
+  <!-- Your site content would be here -->
+  <script>
+    function generatePackingSlip() {
+      const name = document.getElementById("orderName").value.trim();
+      const items = document.getElementById("orderItems").value.trim();
+      const slipArea = document.getElementById("packingSlip");
+      const slipContent = document.getElementById("slipContent");
+      if (!name || !items) return alert("Fill in both name and items.");
+      const date = new Date().toLocaleDateString();
+      const formatted = `Customer: ${name}\nDate: ${date}\n\nItems:\n${items}`;
+      slipContent.textContent = formatted;
+      slipArea.classList.remove("hidden");
+    }
+
+    function downloadPackingSlip() {
+      const text = document.getElementById("slipContent").textContent;
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const lines = text.split('\n');
+      let y = 10;
+      lines.forEach(line => {
+        doc.text(line, 10, y);
+        y += 10;
+      });
+      doc.save("packing-slip.pdf");
+    }
+
+    function sendShippingNotification() {
+      const email = document.getElementById("shippingEmail").value.trim();
+      const tracking = document.getElementById("trackingNumber").value.trim();
+      const msg = document.getElementById("customMessage").value.trim();
+      if (!email || !tracking) return alert("Email and tracking number are required.");
+
+      fetch('https://formsubmit.co/ajax/krystel@rodgersjamberries.com', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email: email,
+          subject: "Your Freeze-Dried Candy Order Has Shipped!",
+          message: `Hi! Your order has shipped.\nTracking Number: ${tracking}\n${msg ? '\nMessage: ' + msg : ''}`
+        })
+      })
+      .then(response => response.json())
+      .then(data => alert("Shipping email sent successfully."))
+      .catch(error => alert("Failed to send email. Please try again later."));
+    }
+  </script>
+</body>
+</html>
